@@ -1,31 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TabloidCLI.Models;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
-    class JournalManager : IUserInterfaceManager
+    class BlogManager : IUserInterfaceManager
     {
         private readonly IUserInterfaceManager _parentUI;
-        private JournalRepository _journalRepository;
+        private BlogRepository _journalRepository;
         private string _connectionString;
 
-        public JournalManager(IUserInterfaceManager parentUI, string connectionString)
+        public BlogManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
-            _journalRepository = new JournalRepository(connectionString);
+            _journalRepository = new BlogRepository(connectionString);
             _connectionString = connectionString;
         }
 
         public IUserInterfaceManager Execute()
         {
             Console.WriteLine("Journal Menu");
-            Console.WriteLine(" 1) List Journal Entries");
-            Console.WriteLine(" 2) Journal Details");
-            Console.WriteLine(" 3) Add Journal");
-            Console.WriteLine(" 4) Edit Journal");
-            Console.WriteLine(" 5) Remove Journal");
+            Console.WriteLine(" 1) List Blog Entries");
+            Console.WriteLine(" 2) Blog Details");
+            Console.WriteLine(" 3) Add Blog");
+            Console.WriteLine(" 4) Edit Blog");
+            Console.WriteLine(" 5) Remove Blog");
             Console.WriteLine(" 0) Go Back");
 
             Console.Write("> ");
@@ -75,5 +74,4 @@ namespace TabloidCLI.UserInterfaceManagers
     }
 
 }
-
 
