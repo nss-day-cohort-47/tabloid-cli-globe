@@ -5,7 +5,7 @@ using TabloidCLI.Models;
 
 namespace TabloidCLI.Repositories
 {
-    public class PostRepository : DatabaseConnector, IRepository<Post>
+    public class PostRepository : DatabaseConnector//, IRepository<Post>
     {
         public PostRepository(string connectionString) : base(connectionString) { }
 
