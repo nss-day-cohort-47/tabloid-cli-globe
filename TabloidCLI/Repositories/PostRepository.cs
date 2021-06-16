@@ -137,7 +137,7 @@ namespace TabloidCLI.Repositories
                     cmd.Parameters.AddWithValue("@url", post.Url);
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
                     cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
-                    cmd.Parameters.AddWithValue("@blogId", 6); //);
+                    cmd.Parameters.AddWithValue("@blogId", post.Blog.Id);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -163,7 +163,7 @@ namespace TabloidCLI.Repositories
                     cmd.Parameters.AddWithValue("@url", post.Url);
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
                     cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
-                    cmd.Parameters.AddWithValue("@blogId", 6); //);
+                    cmd.Parameters.AddWithValue("@blogId", post.Blog.Id);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -172,7 +172,17 @@ namespace TabloidCLI.Repositories
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Post WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

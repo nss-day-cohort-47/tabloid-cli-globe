@@ -58,50 +58,22 @@ namespace TabloidCLI.UserInterfaceManagers
                     return this;
             }
         }
-        private Post Choose(string prompt = null)
-        {
-            if (prompt == null)
-            {
-                prompt = "Please choose a Post:";
-            }
-
-            Console.WriteLine(prompt);
-
-            List<Post> posts = _postRepository.GetAll();
-
-            for (int i = 0; i < posts.Count; i++)
-            {
-                Post post = posts[i];
-                Console.WriteLine($" {i + 1}) {post.Title}");
-            }
-            Console.Write("> ");
-
-            string input = Console.ReadLine();
-            try
-            {
-                int choice = int.Parse(input);
-                return posts[choice - 1];
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Invalid Selection");
-                return null;
-            }
-        }
 
         private void List()
         {
+            Console.Clear();
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(post.Title);
-                Console.WriteLine(post.Url);
+                Console.WriteLine($"{post.Title}  @  {post.Url}");
+                Console.WriteLine();
             }
         }
 
         private void Add()
         {
-            Console.WriteLine("New Post");
+            Console.Clear();
+            Console.WriteLine("Add New Post");
             Post post = new Post();
 
             Console.Write("Title: ");
@@ -124,6 +96,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Edit()
         {
+            Console.Clear();
             //throw new NotImplementedException();
             Post postToEdit = Choose("Which post would you like to edit?");
             if (postToEdit == null)
@@ -158,7 +131,42 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Remove()
         {
-            throw new NotImplementedException();
+            Console.Clear();
+            Post postToDelete = Choose("Which Post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+            }
+        }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a Post:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Post> posts = _postRepository.GetAll();
+
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
         }
 
         public Author AuthorToChoose(string prompt = null)
