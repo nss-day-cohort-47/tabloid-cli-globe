@@ -10,40 +10,38 @@ namespace TabloidCLI
     {
         public BlogRepository(string connectionString) : base(connectionString) { }
 
-        //public List<Author> GetAll()
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"SELECT id,
-        //                                       FirstName,
-        //                                       LastName,
-        //                                       Bio
-        //                                  FROM Author";
+        public List<Blog> GetAll()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT id,
+                                               Title,
+                                               Url
+                                          FROM Blog";
 
-        //            List<Author> authors = new List<Author>();
+                    List<Blog> blogs = new List<Blog>();
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                Author author = new Author()
-        //                {
-        //                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-        //                    FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-        //                    LastName = reader.GetString(reader.GetOrdinal("LastName")),
-        //                    Bio = reader.GetString(reader.GetOrdinal("Bio")),
-        //                };
-        //                authors.Add(author);
-        //            }
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Blog blog = new Blog()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Url = reader.GetString(reader.GetOrdinal("Url")),
+                        };
+                        blogs.Add(blog);
+                    }
 
-        //            reader.Close();
+                    reader.Close();
 
-        //            return authors;
-        //        }
-        //    }
-        //}
+                    return blogs;
+                }
+            }
+        }
 
         //public Author Get(int id)
         //{
