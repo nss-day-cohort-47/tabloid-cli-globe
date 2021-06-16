@@ -113,28 +113,25 @@ namespace TabloidCLI
             }
         }
 
-        //public void Update(Author author)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"UPDATE Author 
-        //                                   SET FirstName = @firstName,
-        //                                       LastName = @lastName,
-        //                                       bio = @bio
-        //                                 WHERE id = @id";
+        public void Update(Blog blog)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Blog 
+                                           SET Title = @title,
+                                               Url = @url
+                                         WHERE id = @id";
 
-        //            cmd.Parameters.AddWithValue("@firstName", author.FirstName);
-        //            cmd.Parameters.AddWithValue("@lastName", author.LastName);
-        //            cmd.Parameters.AddWithValue("@bio", author.Bio);
-        //            cmd.Parameters.AddWithValue("@id", author.Id);
+                    cmd.Parameters.AddWithValue("@title", blog.Title);
+                    cmd.Parameters.AddWithValue("@Url", blog.Url);
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public void Delete(int id)
         {
