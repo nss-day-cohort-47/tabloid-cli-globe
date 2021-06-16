@@ -57,43 +57,44 @@ namespace TabloidCLI.UserInterfaceManagers
                     return this;
             }
         }
-        //private Post Choose(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose a Post:";
-        //    }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a Post:";
+            }
 
-        //    Console.WriteLine(prompt);
+            Console.WriteLine(prompt);
 
-        //    List<Post> posts = _postRepository.GetAll();
+            List<Post> posts = _postRepository.GetAll();
 
-        //    for (int i = 0; i < posts.Count; i++)
-        //    {
-        //        Post post = posts[i];
-        //        Console.WriteLine($" {i + 1}) {post.Title}");
-        //    }
-        //    Console.Write("> ");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return posts[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
         private void List()
         {
             List<Post> posts = _postRepository.GetAll();
             foreach (Post post in posts)
             {
-                Console.WriteLine(post);
+                Console.WriteLine(post.Title);
+                Console.WriteLine(post.Url);
             }
         }
 
@@ -123,6 +124,33 @@ namespace TabloidCLI.UserInterfaceManagers
         private void Edit()
         {
             throw new NotImplementedException();
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
+            Console.WriteLine();
+            Console.Write("New Title (blank to leave unchanged: ");
+            string firstName = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(firstName))
+            {
+                authorToEdit.FirstName = firstName;
+            }
+            Console.Write("New last name (blank to leave unchanged: ");
+            string lastName = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(lastName))
+            {
+                authorToEdit.LastName = lastName;
+            }
+            Console.Write("New bio (blank to leave unchanged: ");
+            string bio = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(bio))
+            {
+                authorToEdit.Bio = bio;
+            }
+
+            _authorRepository.Update(authorToEdit);
+
         }
 
         private void Remove()

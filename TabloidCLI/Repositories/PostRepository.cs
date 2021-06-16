@@ -11,7 +11,54 @@ namespace TabloidCLI.Repositories
 
         public List<Post> GetAll()
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT p.id,
+                                                p.title,
+                                                p.url,
+                                                p.publishDateTime,
+                                                a.firstName,
+                                                a.lastName,
+                                                b.title AS BlogTitle
+                                                FROM Post p
+                                                LEFT JOIN Author a ON p.AuthorId = a.id
+                                                LEFT JOIN Blog b On p.BlogId = b.Id
+                                                ";
+
+                    List<Post> posts = new List<Post>();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Post post = new Post()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("id")),
+                            Title = reader.GetString(reader.GetOrdinal("title")),
+                            Url = reader.GetString(reader.GetOrdinal("url")),
+                            PublishDateTime = reader.GetDateTime(reader.GetOrdinal("publishDateTime")),
+                            Author = new Author()
+                            {
+                                FirstName = reader.GetString(reader.GetOrdinal("firstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("lastname"))
+                            },
+                            Blog = new Blog()
+                            {
+                                Title = reader.GetString(reader.GetOrdinal("BlogTitle"))
+                            }
+
+                        };
+                        posts.Add(post);
+                    
+                    }
+
+                    reader.Close();
+                    return posts;
+                }
+            }
         }
 
         public Post Get(int id)
@@ -99,7 +146,27 @@ namespace TabloidCLI.Repositories
 
         public void Update(Post post)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Post
+                                             SET Title = @title,
+                                                 URL = @url,
+                                                 PublishDateTime = @publishDateTime,
+                                                 AuthorId  = @authorId,
+                                                 BlogId = @blogId
+                                             WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@url", post.Url);
+                    cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@authorId", post.Author.Id);
+                    cmd.Parameters.AddWithValue("@blogId", 6); //);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void Delete(int id)
