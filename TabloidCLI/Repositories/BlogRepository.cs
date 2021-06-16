@@ -127,6 +127,7 @@ namespace TabloidCLI
 
                     cmd.Parameters.AddWithValue("@title", blog.Title);
                     cmd.Parameters.AddWithValue("@Url", blog.Url);
+                    cmd.Parameters.AddWithValue("@id", blog.Id);
 
                     cmd.ExecuteNonQuery();
                 }
