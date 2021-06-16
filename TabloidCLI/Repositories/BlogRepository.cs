@@ -98,23 +98,22 @@ namespace TabloidCLI
         //    }
         //}
 
-        //public void Insert(Author author)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"INSERT INTO Author (FirstName, LastName, Bio )
-        //                                             VALUES (@firstName, @lastName, @bio)";
-        //            cmd.Parameters.AddWithValue("@firstName", author.FirstName);
-        //            cmd.Parameters.AddWithValue("@lastName", author.LastName);
-        //            cmd.Parameters.AddWithValue("@bio", author.Bio);
+        public void Insert(Blog blog)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Blog (Title, Url)
+                                                     VALUES (@title, @Url)";
+                    cmd.Parameters.AddWithValue("@title", blog.Title);
+                    cmd.Parameters.AddWithValue("@Url", blog.Url);
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         //public void Update(Author author)
         //{

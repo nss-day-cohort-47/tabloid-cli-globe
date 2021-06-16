@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TabloidCLI.Models;
+
 
 namespace TabloidCLI.UserInterfaceManagers
 {
     class BlogManager : IUserInterfaceManager
     {
         private readonly IUserInterfaceManager _parentUI;
-        private BlogRepository _journalRepository;
+        private BlogRepository _blogRepository;
         private string _connectionString;
 
         public BlogManager(IUserInterfaceManager parentUI, string connectionString)
         {
             _parentUI = parentUI;
-            _journalRepository = new BlogRepository(connectionString);
+            _blogRepository = new BlogRepository(connectionString);
             _connectionString = connectionString;
         }
 
@@ -35,12 +37,14 @@ namespace TabloidCLI.UserInterfaceManagers
                     List();
                     return this;
                 case "2":
+                    throw new NotImplementedException();
+                case "3":
                     Add();
                     return this;
-                case "3":
+                case "4":
                     Edit();
                     return this;
-                case "4":
+                case "5":
                     Remove();
                     return this;
                 case "0":
@@ -58,7 +62,18 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
-            throw new NotImplementedException();
+            {
+                Console.WriteLine("New Blog");
+                Blog blog = new Blog();
+
+                Console.Write("Title: ");
+                blog.Title = Console.ReadLine();
+
+                Console.Write("URL: ");
+                blog.Url = Console.ReadLine();
+
+                _blogRepository.Insert(blog);
+            }
         }
 
         private void Edit()
