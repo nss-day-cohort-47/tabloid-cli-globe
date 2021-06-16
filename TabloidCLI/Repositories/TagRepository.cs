@@ -18,34 +18,70 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT id, 
-                                                Name 
-                                                FROM Tag";
+                    cmd.CommandText = @"SELECT id, Name FROM Tag";
+                    //command sent through the connection to create reader
 
                     List<Tag> tags = new List<Tag>();
-                    // ^ Add a: Type(List) using Class(<Tag>) of objects(tags) to existing List<Tag>
+                    // ^ Creating Type(List) using Class(<Tag>) of objects(tags) to existing List<Tag>
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         Tag tag = new Tag()
+                        //connection is taking existing Sql data and returning it
+                        //as a new (C#) tag object, then adding to the tags list
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Name = reader.GetString(reader.GetOrdinal("Name")),
+                            //requesting exact data that needs to be returned for each new tag object
                         };
                         tags.Add(tag);
                     }
 
                     reader.Close();
-
+                    //close reader
                     return tags;
+                    // return all tag objects
                 }
             }
         }
 
         public Tag Get(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT tag.Id,
+                                                tag.Name";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    Tag tag = null;
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        if (tag == null)
+                        {
+                            tag = new Tag()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                //GetOrdinal refers to column # ( Id is 0)
+                                //GetInt32 returns objects based on the (int) values
+                                //GetString returns objects based on the (string) values
+                            };
+                        }
+                    }
+
+                    reader.Close();
+                    return tag;
+
+                }
+
+            }
         }
 
         public void Insert(Tag tag)
