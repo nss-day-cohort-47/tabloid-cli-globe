@@ -158,6 +158,7 @@ namespace TabloidCLI.Repositories
                                                  AuthorId  = @authorId,
                                                  BlogId = @blogId
                                              WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", post.Id);
                     cmd.Parameters.AddWithValue("@title", post.Title);
                     cmd.Parameters.AddWithValue("@url", post.Url);
                     cmd.Parameters.AddWithValue("@publishDateTime", post.PublishDateTime);
