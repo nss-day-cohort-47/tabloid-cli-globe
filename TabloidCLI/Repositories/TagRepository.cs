@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Repository files handle SQL database and program interactions
+using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using TabloidCLI.Models;
@@ -106,7 +107,23 @@ namespace TabloidCLI
 
         public void Update(Tag tag)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Tag
+                                          SET Name = @Name
+                                          WHERE id = @id";
+
+                    cmd.Parameters.AddWithValue("@Name", tag.Name);
+                    cmd.Parameters.AddWithValue("@id", tag.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            //update tag id and name properties using sql connect and command
+            //used in edit() method
         }
 
         public void Delete(int id)
