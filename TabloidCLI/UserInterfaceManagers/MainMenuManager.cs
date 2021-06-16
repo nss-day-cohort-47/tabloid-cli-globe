@@ -23,6 +23,7 @@ namespace TabloidCLI.UserInterfaceManagers
             string choice = Console.ReadLine();
             switch (choice)
             {
+                //"this" refers to the object you are currently in
                 case "1": return new JournalManager(this, CONNECTION_STRING);
                 case "2": return new BlogManager(this, CONNECTION_STRING);
                 case "3": return new AuthorManager(this, CONNECTION_STRING);
