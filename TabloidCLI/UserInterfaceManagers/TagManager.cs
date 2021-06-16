@@ -53,9 +53,16 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        //All methods are private in this project
         private void List()
         {
-            throw new NotImplementedException();
+            List<Tag> tags = _tagRepository.GetAll();
+            foreach (Tag tag in tags)
+            {
+                Console.WriteLine(tag);
+            }
+            //get full list of tags via GetAll()
+            // for each tag object in the list, show full data
         }
 
         private void Add()
