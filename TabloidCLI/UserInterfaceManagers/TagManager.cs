@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Manager files handle the connections between the data returned from SQL requests and user interface
+using System;
 using System.Collections.Generic;
 using TabloidCLI.Models;
 
@@ -65,6 +66,37 @@ namespace TabloidCLI.UserInterfaceManagers
             // for each tag object in the list, show full data
         }
 
+        private Tag Choose( string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose a tag:";
+            }
+
+            Console.WriteLine(prompt);
+
+            List<Tag> tags = _tagRepository.GetAll();
+
+            for (int i = 0; i < tags.Count; i++)
+                {
+                Tag tag = tags[i];
+                Console.WriteLine($" {i + 1}) { tag.Name}");
+            }
+            Console.Write(">");
+
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return tags[choice - 1];
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid selection");
+                return null;
+            }
+        }
+
         private void Add()
         {
             Console.WriteLine("Time for a new tag!");
@@ -78,12 +110,31 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Edit()
         {
-            throw new NotImplementedException();
+            Tag tagToEdit = Choose("Which tag would you like to change?");
+            if (tagToEdit == null)
+            {
+                return;
+            }
+
+            Console.WriteLine();
+            Console.Write("New tag name (blank to leave unchaged: ");
+            string Name = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(Name))
+            {
+                tagToEdit.Name = Name;
+            }
+
+            _tagRepository.Update(tagToEdit);
+            //Update tag name with user input
         }
 
         private void Remove()
         {
-            throw new NotImplementedException();
+            Tag tagToDelete = Choose("Which tag would you like to delete?");
+            if (tagToDelete !=null)
+            {
+                _tagRepository.Delete(tagToDelete.Id);
+            }
         }
     }
 }
