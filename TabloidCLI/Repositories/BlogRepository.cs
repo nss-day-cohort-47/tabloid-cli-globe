@@ -136,20 +136,20 @@ namespace TabloidCLI
         //    }
         //}
 
-        //public void Delete(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"DELETE FROM Author WHERE id = @id";
-        //            cmd.Parameters.AddWithValue("@id", id);
+        public void Delete(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM blog WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         //public void InsertTag(Author author, Tag tag)
         //{
