@@ -18,8 +18,12 @@ namespace TabloidCLI
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT id, Name FROM Tag";
+                    cmd.CommandText = @"SELECT id, 
+                                                Name 
+                                                FROM Tag";
+
                     List<Tag> tags = new List<Tag>();
+                    // ^ Add a: Type(List) using Class(<Tag>) of objects(tags) to existing List<Tag>
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -46,7 +50,22 @@ namespace TabloidCLI
 
         public void Insert(Tag tag)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Tag (Name)
+                                                    VALUES (@Name)";
+
+                    cmd.Parameters.AddWithValue("@Name", tag.Name);
+
+                    cmd.ExecuteNonQuery();
+                    // @ at the beginning means "multi line"
+                    // "@Name" signifies a variable
+                    // used for add/update/delete etc (not requesting any data back)
+                }
+            }
         }
 
         public void Update(Tag tag)

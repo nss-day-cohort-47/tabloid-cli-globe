@@ -1,14 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using TabloidCLI.Models;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
     public class TagManager : IUserInterfaceManager
     {
         private readonly IUserInterfaceManager _parentUI;
+        private TagRepository _tagRepository;
+        private string _connectionString;
+        // _ denotes private properties that are being created and inherited
 
         public TagManager(IUserInterfaceManager parentUI, string connectionString)
+            // constructor used to create new objects
         {
             _parentUI = parentUI;
+            //_parentUI is used to go back to the main menu
+            _tagRepository = new TagRepository(connectionString);
+            _connectionString = connectionString;
         }
 
         public IUserInterfaceManager Execute()
@@ -51,7 +60,13 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Add()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Time for a new tag!");
+            Tag tag = new Tag();
+
+            Console.WriteLine("Enter the new tag name:");
+            tag.Name = Console.ReadLine();
+
+            _tagRepository.Insert(tag);
         }
 
         private void Edit()
