@@ -6,186 +6,143 @@ using TabloidCLI.Repositories;
 
 namespace TabloidCLI
 {
-    public class JournalRepository : DatabaseConnector 
+    public class JournalRepository : DatabaseConnector
     {
         public JournalRepository(string connectionString) : base(connectionString) { }
 
-        //public List<Author> GetAll()
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"SELECT id,
-        //                                       FirstName,
-        //                                       LastName,
-        //                                       Bio
-        //                                  FROM Author";
+        public List<Journal> GetAll()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT id,
+                                               Title,
+                                               Content,
+                                               CreateDateTime
+                                          FROM Journal";
 
-        //            List<Author> authors = new List<Author>();
+                    List<Journal> journalEntries = new List<Journal>();
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                Author author = new Author()
-        //                {
-        //                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-        //                    FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-        //                    LastName = reader.GetString(reader.GetOrdinal("LastName")),
-        //                    Bio = reader.GetString(reader.GetOrdinal("Bio")),
-        //                };
-        //                authors.Add(author);
-        //            }
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Journal journal = new Journal()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Content = reader.GetString(reader.GetOrdinal("Content")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                        };
+                        journalEntries.Add(journal);
+                    }
 
-        //            reader.Close();
+                    reader.Close();
 
-        //            return authors;
-        //        }
-        //    }
-        //}
+                    return journalEntries;
+                }
+            }
+        }
 
-        //public Author Get(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"SELECT a.Id AS AuthorId,
-        //                                       a.FirstName,
-        //                                       a.LastName,
-        //                                       a.Bio,
-        //                                       t.Id AS TagId,
-        //                                       t.Name
-        //                                  FROM Author a 
-        //                                       LEFT JOIN AuthorTag at on a.Id = at.AuthorId
-        //                                       LEFT JOIN Tag t on t.Id = at.TagId
-        //                                 WHERE a.id = @id";
+        public Journal Get(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT j.Id AS AuthorId,
+                                               j.Title,
+                                               j.Content,
+                                               j.CreateDateTime
+                                          FROM Journal j
+                                         WHERE j.id = @id";
 
-        //            cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@id", id);
 
-        //            Author author = null;
+                    Journal journal = null;
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                if (author == null)
-        //                {
-        //                    author = new Author()
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("AuthorId")),
-        //                        FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-        //                        LastName = reader.GetString(reader.GetOrdinal("LastName")),
-        //                        Bio = reader.GetString(reader.GetOrdinal("Bio")),
-        //                    };
-        //                }
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        if (journal == null)
+                        {
+                            journal = new Journal()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("JournalId")),
+                                Title = reader.GetString(reader.GetOrdinal("Title")),
+                                Content = reader.GetString(reader.GetOrdinal("Content")),
+                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            };
+                        }
+                    }
 
-        //                if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
-        //                {
-        //                    author.Tags.Add(new Tag()
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-        //                        Name = reader.GetString(reader.GetOrdinal("Name")),
-        //                    });
-        //                }
-        //            }
+                    reader.Close();
 
-        //            reader.Close();
+                    return journal;
+                }
+            }
+        }
 
-        //            return author;
-        //        }
-        //    }
-        //}
+        public void Insert(Journal journal)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Journal (Title, Content, CreateDateTime )
+                                                     VALUES (@Title, @Content, @CreateDateTime)";
+                    cmd.Parameters.AddWithValue("@Title", journal.Title);
+                    cmd.Parameters.AddWithValue("@Content", journal.Content);
+                    cmd.Parameters.AddWithValue("@CreateDateTime", journal.CreateDateTime);
 
-        //public void Insert(Author author)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"INSERT INTO Author (FirstName, LastName, Bio )
-        //                                             VALUES (@firstName, @lastName, @bio)";
-        //            cmd.Parameters.AddWithValue("@firstName", author.FirstName);
-        //            cmd.Parameters.AddWithValue("@lastName", author.LastName);
-        //            cmd.Parameters.AddWithValue("@bio", author.Bio);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
 
-        //public void Update(Author author)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"UPDATE Author 
-        //                                   SET FirstName = @firstName,
-        //                                       LastName = @lastName,
-        //                                       bio = @bio
-        //                                 WHERE id = @id";
 
-        //            cmd.Parameters.AddWithValue("@firstName", author.FirstName);
-        //            cmd.Parameters.AddWithValue("@lastName", author.LastName);
-        //            cmd.Parameters.AddWithValue("@bio", author.Bio);
-        //            cmd.Parameters.AddWithValue("@id", author.Id);
+        public void Update(Journal journal)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Journal 
+                                           SET Title = @Title,
+                                               Content = @Content,
+                                               CreateDateTime = @CreateDateTime
+                                         WHERE id = @id";
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.Parameters.AddWithValue("@Title", journal.Title);
+                    cmd.Parameters.AddWithValue("@Content", journal.Content);
+                    cmd.Parameters.AddWithValue("@CreateDateTime", journal.CreateDateTime);
+                    cmd.Parameters.AddWithValue("@id", journal.Id);
 
-        //public void Delete(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"DELETE FROM Author WHERE id = @id";
-        //            cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+        public void Delete(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM Journal WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
 
-        //public void InsertTag(Author author, Tag tag)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"INSERT INTO AuthorTag (AuthorId, TagId)
-        //                                               VALUES (@authorId, @tagId)";
-        //            cmd.Parameters.AddWithValue("@authorId", author.Id);
-        //            cmd.Parameters.AddWithValue("@tagId", tag.Id);
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-        //public void DeleteTag(int authorId, int tagId)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"DELETE FROM AuthorTAg 
-        //                                 WHERE AuthorId = @authorid AND 
-        //                                       TagId = @tagId";
-        //            cmd.Parameters.AddWithValue("@authorId", authorId);
-        //            cmd.Parameters.AddWithValue("@tagId", tagId);
-
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+     
     }
 }
