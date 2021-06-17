@@ -6,7 +6,7 @@ using TabloidCLI.Repositories;
 
 namespace TabloidCLI
 {
-    public class BlogRepository : DatabaseConnector
+    public class BlogRepository : DatabaseConnector, IRepository<Blog>
     {
         public BlogRepository(string connectionString) : base(connectionString) { }
 
@@ -43,58 +43,56 @@ namespace TabloidCLI
             }
         }
 
-        //public Author Get(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"SELECT a.Id AS AuthorId,
-        //                                       a.FirstName,
-        //                                       a.LastName,
-        //                                       a.Bio,
-        //                                       t.Id AS TagId,
-        //                                       t.Name
-        //                                  FROM Author a 
-        //                                       LEFT JOIN AuthorTag at on a.Id = at.AuthorId
-        //                                       LEFT JOIN Tag t on t.Id = at.TagId
-        //                                 WHERE a.id = @id";
+        public Blog Get(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT b.Id AS BlogId,
+                                               b.title,
+                                               b.Url,
+                                               t.Id AS TagId,
+                                               t.Name
+                                        FROM Blog b
+                                               LEFT JOIN BlogTag bt on b.Id = bt.BlogId
+                                               LEFT JOIN Tag t on t.Id = bt.TagId
+                                               WHERE b.id = @Id";
 
-        //            cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@id", id);
 
-        //            Author author = null;
+                    Blog blog = null;
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                if (author == null)
-        //                {
-        //                    author = new Author()
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("AuthorId")),
-        //                        FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-        //                        LastName = reader.GetString(reader.GetOrdinal("LastName")),
-        //                        Bio = reader.GetString(reader.GetOrdinal("Bio")),
-        //                    };
-        //                }
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        if (blog == null)
+                        {
+                            blog = new Blog()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("BlogId")),
+                                Title = reader.GetString(reader.GetOrdinal("Title")),
+                                Url = reader.GetString(reader.GetOrdinal("Url")),
+                            };
+                        }
 
-        //                if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
-        //                {
-        //                    author.Tags.Add(new Tag()
-        //                    {
-        //                        Id = reader.GetInt32(reader.GetOrdinal("TagId")),
-        //                        Name = reader.GetString(reader.GetOrdinal("Name")),
-        //                    });
-        //                }
-        //            }
+                        if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
+                        {
+                            blog.Tags.Add(new Tag()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                            });
+                        }
+                    }
 
-        //            reader.Close();
+                    reader.Close();
 
-        //            return author;
-        //        }
-        //    }
-        //}
+                    return blog;
+                }
+            }
+        }
 
         public void Insert(Blog blog)
         {
