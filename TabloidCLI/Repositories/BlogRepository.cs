@@ -163,22 +163,56 @@ namespace TabloidCLI
         //    }
         //}
 
-        //public void DeleteTag(int authorId, int tagId)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"DELETE FROM AuthorTAg 
-        //                                 WHERE AuthorId = @authorid AND 
-        //                                       TagId = @tagId";
-        //            cmd.Parameters.AddWithValue("@authorId", authorId);
-        //            cmd.Parameters.AddWithValue("@tagId", tagId);
+        public void DeleteTag(int blogId, int tagId)
+            //blogId and tagId int are passed in as parameters
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM BlogTag 
+                                         WHERE BlogId = @blogid AND 
+                                               TagId = @tagId";
+                    cmd.Parameters.AddWithValue("@blogId", blogId);
+                    cmd.Parameters.AddWithValue("@tagId", tagId);
+                    //delete objects within BlogTag table where BlogId and TagId match the parameters
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
+
+//**** will be moved to blog detail manager once available
+//private void RemoveBlogTag()
+//{
+//    Blog blog = _blogRepository.Get(_blogId);
+
+//    Console.WriteLine($"Which tag would you like to remove from {blog.Name}?");
+//    List<Tag> tags = blog.Tags;
+//    //create list of tags associated with that blogId from the database
+
+//    for (int i = 0; i < tags.Count; i++)
+//        //as long as i is less than the total # of tags, add the next tag to the list
+//    {
+//        Tag tag = tags[i];
+//        Console.WriteLine($" {i + 1}) {tag.Name}");
+//    }
+//        //displays tag menue # and tag name
+    
+//    Console.Write("> ");
+
+//    string input = Console.ReadLine();
+//    try
+//    {
+//        int choice = int.Parse(input);
+//        Tag tag = tags[choice - 1];
+//        _blogRepository.DeleteTag(blog.Id, tag.Id);
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine("Invalid Selection. Won't remove any tags.");
+//    }
+//}
