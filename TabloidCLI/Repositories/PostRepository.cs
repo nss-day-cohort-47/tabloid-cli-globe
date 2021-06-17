@@ -74,10 +74,15 @@ namespace TabloidCLI.Repositories
                                                 p.PublishDateTime,
                                                 a.FirstName,
                                                 a.LastName,
-                                                b.Title as BlogTitle
+                                                b.Title as BlogTitle,
+                                                t.Id AS TagId,
+                                                t.Name
                                             FROM Post p
                                                 LEFT JOIN Author a ON p.AuthorId = a.Id
                                                 LEFT JOIN Blog b ON p.BlogId = b.Id
+                                                LEFT JOIN PostTag pt ON p.Id = pt.PostId
+                                                LEFT JOIN Tag t on t.id =pt.TagId
+                                            WHERE p.id = @id
                                                 ";
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -105,6 +110,14 @@ namespace TabloidCLI.Repositories
 
                             };
 
+                        }
+                        if (!reader.IsDBNull(reader.GetOrdinal("TagId")))
+                        {
+                            post.Tags.Add(new Tag()
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("TagId")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                            });
                         }
                     }
                     reader.Close();
@@ -233,21 +246,21 @@ namespace TabloidCLI.Repositories
             }
         }
 
-        //public void InsertTag(Post post, Tag tag)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"INSERT INTO PostTag (PostId, TagId)
-        //                                               VALUES (@postId, @tagId)";
-        //            cmd.Parameters.AddWithValue("@postId", post.Id);
-        //            cmd.Parameters.AddWithValue("@tagId", tag.Id);
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+        public void InsertTag(Post post, Tag tag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO PostTag (PostId, TagId)
+                                                       VALUES (@postId, @tagId)";
+                    cmd.Parameters.AddWithValue("@postId", post.Id);
+                    cmd.Parameters.AddWithValue("@tagId", tag.Id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         //public void DeleteTag(int authorId, int tagId)
         //{
