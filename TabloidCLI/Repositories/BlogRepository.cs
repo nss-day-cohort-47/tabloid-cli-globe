@@ -147,68 +147,45 @@ namespace TabloidCLI
             }
         }
 
-        //public void InsertTag(Blog blog, Tag tag)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"INSERT INTO BlogTag (BlogId, TagId)
-        //                                               VALUES (@blogId, @tagId)";
-        //            cmd.Parameters.AddWithValue("@blogId", blog.Id);
-        //            cmd.Parameters.AddWithValue("@tagId", tag.Id);
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+        public void InsertTag(Blog blog, Tag tag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO BlogTag (BlogId, TagId)
+                                                       VALUES (@blogId, @tagId)";
+                    cmd.Parameters.AddWithValue("@blogId", blog.Id);
+                    cmd.Parameters.AddWithValue("@tagId", tag.Id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
-//private void AddTag()
-//        {
-//            Blog blog = _blogRepository.Get(_blogId);
 
-//        Console.WriteLine($"Which tag would you like to add to {blog.Name}?");
-//            List<Tag> tags = _tagRepository.GetAll();
 
-//            for (int i = 0; i<tags.Count; i++)
-//            {
-//                Tag tag = tags[i];
-//        Console.WriteLine($" {i + 1}) {tag.Name}");
-//            }
-//    Console.Write("> ");
 
-//            string input = Console.ReadLine();
-//            try
-//            {
-//                int choice = int.Parse(input);
-//    Tag tag = tags[choice - 1];
-//    _blogRepository.InsertTag(blog, tag);
-//            }
-//            catch (Exception ex)
-//{
-//    Console.WriteLine("Invalid Selection. Won't add any tags.");
-//}
-//        }
 
-       
-        
-        
-        //public void DeleteTag(int authorId, int tagId)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"DELETE FROM AuthorTAg 
-        //                                 WHERE AuthorId = @authorid AND 
-        //                                       TagId = @tagId";
-        //            cmd.Parameters.AddWithValue("@authorId", authorId);
-        //            cmd.Parameters.AddWithValue("@tagId", tagId);
+        public void DeleteTag(int blogId, int tagId)
+        //blogId and tagId int are passed in as parameters
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM BlogTag 
+                                         WHERE BlogId = @blogid AND 
+                                               TagId = @tagId";
+                    cmd.Parameters.AddWithValue("@blogId", blogId);
+                    cmd.Parameters.AddWithValue("@tagId", tagId);
+                    //delete objects within BlogTag table where BlogId and TagId match the parameters
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
+
