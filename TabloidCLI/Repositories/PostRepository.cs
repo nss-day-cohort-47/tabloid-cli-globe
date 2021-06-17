@@ -262,22 +262,22 @@ namespace TabloidCLI.Repositories
             }
         }
 
-        //public void DeleteTag(int authorId, int tagId)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"DELETE FROM AuthorTAg 
-        //                                 WHERE AuthorId = @authorid AND 
-        //                                       TagId = @tagId";
-        //            cmd.Parameters.AddWithValue("@authorId", authorId);
-        //            cmd.Parameters.AddWithValue("@tagId", tagId);
+        public void DeleteTag(int postId, int tagId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"DELETE FROM PostTAg 
+                                         WHERE PostId = @postid AND 
+                                               TagId = @tagId";
+                    cmd.Parameters.AddWithValue("@postId", postId);
+                    cmd.Parameters.AddWithValue("@tagId", tagId);
 
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
