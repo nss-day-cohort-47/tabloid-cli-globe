@@ -39,15 +39,15 @@ namespace TabloidCLI.UserInterfaceManagers
                 case "1":
                     View();
                     return this;
-                //case "2":
-                //    AddTag();
-                //    return this;
-                //case "3":
-                //    RemoveTag();
-                //    return this;
-                //case "4":
-                //    ViewPosts();
-                //    return this;
+                case "2":
+                    AddTag();
+                    return this;
+                case "3":
+                    RemoveTag();
+                    return this;
+                case "4":
+                    ViewPosts();
+                    return this;
                 case "0":
                     return _parentUI;
                 default:
