@@ -21,7 +21,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         public IUserInterfaceManager Execute()
         {
-            Console.WriteLine("Journal Menu");
+            Console.WriteLine("Blog Menu");
             Console.WriteLine(" 1) List Blog Entries");
             Console.WriteLine(" 2) Blog Details");
             Console.WriteLine(" 3) Add Blog");
@@ -37,7 +37,15 @@ namespace TabloidCLI.UserInterfaceManagers
                     List();
                     return this;
                 case "2":
-                    throw new NotImplementedException();
+                    Blog blog = Choose();
+                    if (blog == null)
+                    {
+                        return this;
+                    }
+                    else
+                    {
+                        return new BlogDetailManager(this, _connectionString, blog.Id);
+                    }
                 case "3":
                     Add();
                     return this;
