@@ -58,7 +58,7 @@ namespace TabloidCLI
                                         FROM Blog b
                                                LEFT JOIN BlogTag bt on b.Id = bt.BlogId
                                                LEFT JOIN Tag t on t.Id = bt.TagId
-                                               WHERE b.id = @Id";
+                                               WHERE b.id = @2Id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
